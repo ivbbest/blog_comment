@@ -18,7 +18,7 @@ class Post(models.Model):
         ordering = ['created']
 
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     body = models.TextField(blank=False)
     author = models.CharField(max_length=100, blank=True)
     post = models.ForeignKey('Post', related_name='comments',
@@ -33,5 +33,5 @@ class Comment(models.Model):
     class Meta:
         ordering = ('created',)
 
-    class MPTTMeta:
-        order_insertion_by = ['name']
+    # class MPTTMeta:
+    #     order_insertion_by = ['name']

@@ -1,7 +1,6 @@
 from api.models import Post, Comment
 from rest_framework import generics, permissions, viewsets
 from api.serializers import PostSerializer, CommentSerializer
-from api.permissions import IsOwnerOrReadOnly
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -10,47 +9,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
+    # queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    # filter_backends = (DjangoFilterBackend,)
+    filter_fields = ["post"]
 
-
-# class UserList(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = serializers.UserSerializer
-#
-#
-# class UserDetail(generics.RetrieveAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = serializers.UserSerializer
-#
-#
-# class PostList(generics.ListCreateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-#
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
-#
-#
-# class PostDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-#                           IsOwnerOrReadOnly]
-#
-#
-# class CommentList(generics.ListCreateAPIView):
-#     queryset = Comment.objects.all()
-#     serializer_class = serializers.CommentSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-#
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
-#
-#
-# class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Comment.objects.all()
-#     serializer_class = serializers.CommentSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-#                           IsOwnerOrReadOnly]
+    def get_queryset(self):
+        if self.action == "list":
+            return Comment.objects.root_nodes().select_related(
+                "parent", "post"
+            )
+        return Comment.objects.all().select_related("parent", "post")
