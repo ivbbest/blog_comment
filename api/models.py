@@ -3,11 +3,10 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Post(models.Model):
+    title = models.CharField(max_length=100, blank=True)
+    body = models.TextField(blank=True, null=True)
+    author = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100, blank=True, default='')
-    body = models.TextField(blank=True, default='')
-    owner = models.ForeignKey('auth.User', related_name='posts',
-                              on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s %s" % (self.title, self.body)
@@ -20,14 +19,13 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
     body = models.TextField(blank=False)
-    owner = models.ForeignKey('auth.User', related_name='comments',
-                              on_delete=models.CASCADE)
+    author = models.CharField(max_length=100, blank=True)
     post = models.ForeignKey('Post', related_name='comments',
                              on_delete=models.CASCADE)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children')
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "%s %s" % (self.body, self.parent)
