@@ -28,10 +28,10 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "%s %s" % (self.body, self.parent)
+        return 'Comment by {} on {}'.format(self.body, self.post)
 
     class Meta:
-        ordering = ['created']
+        ordering = ('created',)
 
     class MPTTMeta:
         order_insertion_by = ['name']

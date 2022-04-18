@@ -1,15 +1,19 @@
-from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
-from . import views
+from django.urls import path, include
+from rest_framework import routers
+from api.views import PostViewSet, CommentViewSet
+
+
+router_post = routers.DefaultRouter()
+router_post.register(r'post', PostViewSet, basename='post')
+print(router_post.urls)
+
+router_comment = routers.DefaultRouter()
+router_comment.register(r'comment', CommentViewSet, basename='comment')
+print(router_comment.urls)
 
 
 urlpatterns = [
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>/', views.UserDetail.as_view()),
-    path('posts/', views.PostList.as_view()),
-    path('posts/<int:pk>/', views.PostDetail.as_view()),
-    path('comments/', views.CommentList.as_view()),
-    path('comments/<int:pk>/', views.CommentDetail.as_view()),
+    # path('admin/', admin.site.urls),
+    path('api/v1/posts/', include(router_post.urls)),   # http://127.0.0.1:8000/api/v1/post/
+    path('api/v1/comments/', include(router_comment.urls)),   # http://127.0.0.1:8000/api/v1/comments/
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
