@@ -11,7 +11,6 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     # queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    # filter_backends = (DjangoFilterBackend,)
     filter_fields = ["post"]
 
     def get_queryset(self):

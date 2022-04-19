@@ -12,6 +12,7 @@ class CommentSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField(
         read_only=True, method_name="get_child_comments"
     )
+
     class Meta:
         model = Comment
         fields = "__all__"

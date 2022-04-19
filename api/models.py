@@ -32,6 +32,3 @@ class Comment(MPTTModel):
 
     class Meta:
         ordering = ('created',)
-
-    # class MPTTMeta:
-    #     order_insertion_by = ['name']
